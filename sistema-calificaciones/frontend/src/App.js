@@ -7,16 +7,21 @@ import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-boots
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
+import store from './store';
 
 function App() {
   return (
-    <div className="App">
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand>Grade - Assistant</Navbar.Brand>
-      </Navbar>
-      <Login></Login>
-      <RegisterGrades></RegisterGrades>
-    </div>
+    <Provider store={store}>
+      <BrowserRouter>
+        <div className="App">
+          <Navbar bg="light" expand="lg">
+            <Navbar.Brand>Grade - Assistant</Navbar.Brand>
+          </Navbar>
+          <Route exact path="/" component={Login}></Route>
+          <Route exact path="/register_grades" component={RegisterGrades}></Route>
+        </div>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
