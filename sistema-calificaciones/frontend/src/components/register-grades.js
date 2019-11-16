@@ -6,6 +6,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const tableStyle = {
     margin: '5%'
@@ -17,6 +19,11 @@ const backgroundStyle = {
 
 const headersStyle = {
     fontWeight: 'bold'
+}
+
+const dropDownStyle = {
+    margin: '5% 5% 0 5%',
+    width: '30%'
 }
 class RegisterGrades extends React.Component {
 
@@ -30,7 +37,18 @@ class RegisterGrades extends React.Component {
         console.log(files);
 
         return(
-            <div style={backgroundStyle}>
+            <div className={'d-flex flex-column'}>
+                <Select
+                    style = {dropDownStyle}
+                    labelId="demo-simple-select-label"
+                    id="group-selector"
+                    value="Grupo"
+                    //onChange={handleChange}
+                >
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
                 <Paper style={tableStyle}>
                     <Table>
                     <TableHead>
