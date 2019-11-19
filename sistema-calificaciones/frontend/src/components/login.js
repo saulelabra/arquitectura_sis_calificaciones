@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Input from '@material-ui/core/Input';
 import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
+import { Navbar } from 'react-bootstrap';
 
 const loginCard = {
     position: 'absolute',
@@ -24,6 +25,9 @@ class Login extends React.Component {
     render() {
         return(
             <div>
+                <Navbar bg="light" expand="lg">
+                    <Navbar.Brand>Grade - Assistant</Navbar.Brand>
+                </Navbar>
                 <Paper style={loginCard}>
                 <h4 style={formElement}>Sign In</h4>
                 <div style={{display: 'flex', flexDirection: 'column'}}>

@@ -12,6 +12,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import { Navbar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const tableStyle = {
     marginTop: '2%',
@@ -36,6 +38,10 @@ const dropDownStyle = {
 const buttonStyle = {
     margin: '2% 5% 0% 5%',
     width: '10%'
+}
+
+const logOutButtonStyle = {
+    marginLeft: 'auto'
 }
 
 class RegisterGrades extends React.Component {
@@ -72,6 +78,11 @@ class RegisterGrades extends React.Component {
 
         return(
             <div className={'d-flex flex-column'}>
+                <Navbar bg="light" expand="lg" className={'d-flex flex-row'}>
+                    <Navbar.Brand>Grade - Assistant</Navbar.Brand>
+                    <div></div>
+                    <Link className="btn btn-primary" variant="contained" to="/" style={logOutButtonStyle}>Log Out</Link>
+                </Navbar>
                 <div className={"dropdown"} style={dropDownStyle}>
                     <button className={"btn btn-secondary dropdown-toggle"} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown button
