@@ -8,9 +8,13 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from 'react-bootstrap/Button';
+import axios from 'axios';
 
 const tableStyle = {
-    margin: '5%'
+    marginTop: '2%',
+    marginLeft: '5%',
+    marginRight: '5%'
 }
 
 const backgroundStyle = {
@@ -22,13 +26,30 @@ const headersStyle = {
 }
 
 const dropDownStyle = {
-    margin: '5% 5% 0 5%',
-    width: '30%'
+    marginTop: '2%',
+    width: '20%',
+    padding:'0'
 }
+
+const buttonStyle = {
+    margin: '2% 5% 0% 5%',
+    width: '10%'
+}
+
 class RegisterGrades extends React.Component {
 
-    render() {
+    state = {
+        persons: []
+    }
 
+    componentDidMount() {
+        axios.get("https://jsonplaceholder.typicode.com/users").then(res => {
+            console.log(res);
+            this.setState({ persons: res.data });
+        });
+    }
+
+    render() {
         var files = {arr : [
             {'matricula' : 'A01020725', nombre: 'Saúl Labra', cAcad: 100, cEq: 100, cCom: 100, estado: 'aprobado'},
             {'matricula' : 'A01020123', nombre: 'Emilio Hernández', cAcad: 100, cEq: 100, cCom: 100, estado: 'aprobado'}
@@ -38,17 +59,16 @@ class RegisterGrades extends React.Component {
 
         return(
             <div className={'d-flex flex-column'}>
-                <Select
-                    style = {dropDownStyle}
-                    labelId="demo-simple-select-label"
-                    id="group-selector"
-                    value="Grupo"
-                    //onChange={handleChange}
-                >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
+                <div class="dropdown" style={dropDownStyle}>
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown button
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
                 <Paper style={tableStyle}>
                     <Table>
                     <TableHead>
@@ -97,8 +117,47 @@ class RegisterGrades extends React.Component {
                         </TableRow>
                         ))}
                     </TableBody>
+                    <TableBody>
+                        {this.state.persons.map(person => (
+                        <TableRow>
+                            <TableCell align="center">{person.id}</TableCell>
+                            <TableCell align="center">{person.name}</TableCell>
+                            <TableCell align="center">
+                                <TextField
+                                    id="cAcad"
+                                    label="C. Académica"
+                                    margin="normal"
+                                    type="number"
+                                    defaultValue={99}
+                                />
+                            </TableCell>
+                            <TableCell align="center">
+                                <TextField
+                                    id="cEq"
+                                    label="C. Equipo"
+                                    margin="normal"
+                                    type="number"
+                                    defaultValue={99}
+                                />
+                            </TableCell>
+                            <TableCell align="center">
+                                <TextField
+                                    id="cCom"
+                                    label="C. Comunicación"
+                                    margin="normal"
+                                    type="number"
+                                    defaultValue={99}
+                                />
+                            </TableCell>
+                            <TableCell align="center">{person.username}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
                     </Table>
                 </Paper>
+                <div className={'dflex justify-content-center'}>
+                    <Button variant="primary" style={buttonStyle} className>Submit</Button>
+                </div>
             </div>
         );
     }

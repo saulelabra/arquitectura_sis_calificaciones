@@ -1,4 +1,4 @@
-class Strudent {
+class Student {
     constructor(matricula, nombre, cAcad, cEq, cCom, estado) {
         this.matricula = matricula;
         this.nombre = nombre;
@@ -8,3 +8,5 @@ class Strudent {
         this.estado = estado;
     }
 }
+
+export default Student
