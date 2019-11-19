@@ -38,7 +38,7 @@ class Login extends React.Component {
                         label="Password"
                         type="password"
                     />
-                    <Link className="btn btn-primary" variant="contained" to="/MyFiles" onClick={() => this.checkAcc(document.getElementById("user").value, document.getElementById("password").value)}>Sign In</Link>
+                    <Link className="btn btn-primary" variant="contained" to="/register_grades" /*onClick={() => this.checkAcc(document.getElementById("user").value, document.getElementById("password").value)}*/>Sign In</Link>
                 </div>
                 </Paper>
             </div>

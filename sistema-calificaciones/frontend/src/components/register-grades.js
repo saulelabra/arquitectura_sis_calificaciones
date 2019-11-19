@@ -1,3 +1,5 @@
+//https://jsonplaceholder.typicode.com/users
+
 import React, { Component } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -42,6 +44,17 @@ class RegisterGrades extends React.Component {
         persons: []
     }
 
+    /*componentDidMount() {
+        axios.get("http://localhost:8000/test.php", {
+            headers: {
+                'Access-Control-Allow-Origin' : "http://localhost:8000",
+            }
+        }).then(res => {
+            console.log(res);
+            this.setState({ persons: res.data });
+        });
+    }*/
+
     componentDidMount() {
         axios.get("https://jsonplaceholder.typicode.com/users").then(res => {
             console.log(res);
@@ -59,14 +72,14 @@ class RegisterGrades extends React.Component {
 
         return(
             <div className={'d-flex flex-column'}>
-                <div class="dropdown" style={dropDownStyle}>
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div className={"dropdown"} style={dropDownStyle}>
+                    <button className={"btn btn-secondary dropdown-toggle"} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown button
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                    <div className={"dropdown-menu"} aria-labelledby="dropdownMenuButton">
+                        <a className={"dropdown-item"} href="#">Action</a>
+                        <a className={"dropdown-item"} href="#">Another action</a>
+                        <a className={"dropdown-item"} href="#">Something else here</a>
                     </div>
                 </div>
                 <Paper style={tableStyle}>
@@ -83,7 +96,7 @@ class RegisterGrades extends React.Component {
                     </TableHead>
                     <TableBody>
                         {files.arr.map(files => (
-                        <TableRow>
+                        <TableRow key={files.matricula}>
                             <TableCell align="center">{files.matricula}</TableCell>
                             <TableCell align="center">{files.nombre}</TableCell>
                             <TableCell align="center">
@@ -119,7 +132,7 @@ class RegisterGrades extends React.Component {
                     </TableBody>
                     <TableBody>
                         {this.state.persons.map(person => (
-                        <TableRow>
+                        <TableRow key={person.id}>
                             <TableCell align="center">{person.id}</TableCell>
                             <TableCell align="center">{person.name}</TableCell>
                             <TableCell align="center">
