@@ -1,0 +1,32 @@
+//Show tables
+select sistemaCalificaciones(t.schema_id) as sistemaCalificaciones,
+       t.name as table_name,
+       t.create_date,
+       t.modify_date
+from sys.tables t
+where schema_name(t.schema_id) = 'Production' -- put schema name here
+order by table_name;
+
+
+//Creating database "sistemaCalificaciones" and tables
+
+CREATE SCHEMA sistemaCalificaciones;
+GO
+CREATE TABLE sistemaCalificaciones.Estudiante (matricula varchar(5), nombre varchar(30),
+ PRIMARY KEY (matricula)
+);
+
+CREATE TABLE sistemaCalificaciones.Profesor (email varchar(30), nombre varchar(30), contrasena varchar(30),
+ PRIMARY KEY (email)
+);
+
+CREATE TABLE sistemaCalificaciones.Materia (clave varchar(6), nombre varchar(30), profesorEmail varchar(30),
+ PRIMARY KEY (clave),
+ FOREIGN KEY (profesorEmail) REFERENCES sistemaCalificaciones.Profesor(email)
+);
+
+CREATE TABLE sistemaCalificaciones.CalificacionEstudiante (estudianteMatricula varchar(5), materiaClave varchar(6), cAcad int, cEq int, cCom int, estatus varchar(10),
+    PRIMARY KEY (estudianteMatricula, materiaClave),
+    FOREIGN KEY (estudianteMatricula) REFERENCES sistemaCalificaciones.Estudiante(matricula),
+    FOREIGN KEY (materiaClave) REFERENCES sistemaCalificaciones.Materia(clave)
+);
