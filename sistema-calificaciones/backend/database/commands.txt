@@ -30,3 +30,31 @@ CREATE TABLE sistemaCalificaciones.CalificacionEstudiante (estudianteMatricula v
     FOREIGN KEY (estudianteMatricula) REFERENCES sistemaCalificaciones.Estudiante(matricula),
     FOREIGN KEY (materiaClave) REFERENCES sistemaCalificaciones.Materia(clave)
 );
+
+//Inserting test data
+INSERT INTO sistemaCalificaciones.Profesor VALUES('email@gmail.com', 'Legardo', 'pwd');
+
+INSERT INTO sistemaCalificaciones.Estudiante VALUES ('12345', 'Saul Labra', 'pwd');
+
+insert into sistemaCalificaciones.Materia values('TC1000', 'Bases de Datos', 'email@gmail.com');
+
+insert into sistemaCalificaciones.CalificacionEstudiante values(12345, 'TC1000', 100, 100, 100, 'aprobado')
+
+//Queries for APIs
+SELECT * FROM sistemaCalificaciones.Profesor WHERE email = 'email@gmail.com' AND contrasena = 'pwd';
+SELECT * FROM sistemaCalificaciones.Profesor WHERE matricula = '12345' AND contrasena = 'pwd';
+SELECT clave, nombre FROM sistemaCalificaciones.Materia WHERE profesorEmail='email@gmail.com'
+
+SELECT estudianteMatricula, Estudiante.nombre, cAcad, cEq, cCom, estatus
+FROM sistemaCalificaciones.CalificacionEstudiante  
+INNER JOIN sistemaCalificaciones.Estudiante 
+ON sistemaCalificaciones.CalificacionEstudiante.estudianteMatricula = sistemaCalificaciones.Estudiante.matricula
+WHERE materiaClave = 'TC1000'
+
+SELECT sistemaCalificaciones.Materia.nombre AS materiaNombre, estudianteMatricula, Estudiante.nombre, cAcad, cEq, cCom, estatus
+FROM sistemaCalificaciones.CalificacionEstudiante  
+INNER JOIN sistemaCalificaciones.Estudiante 
+ON sistemaCalificaciones.CalificacionEstudiante.estudianteMatricula = sistemaCalificaciones.Estudiante.matricula
+INNER JOIN sistemaCalificaciones.Materia
+ON sistemaCalificaciones.CalificacionEstudiante.materiaClave = sistemaCalificaciones.Materia.clave
+WHERE materiaClave = 'TC1000'

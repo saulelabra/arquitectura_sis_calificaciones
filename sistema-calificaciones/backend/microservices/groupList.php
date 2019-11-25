@@ -1,5 +1,7 @@
 <?php
 
+    $user = $_POST['user'];
+
     // PHP Data Objects(PDO) Sample Code:
     try {
         $conn = new PDO("sqlsrv:server = tcp:sistema-calificaciones-db.database.windows.net,1433; Database = sistema-calificaciones", "saulelabra", "ConstruyeDB1");
@@ -15,18 +17,14 @@
     $serverName = "tcp:sistema-calificaciones-db.database.windows.net,1433";
     $conn = sqlsrv_connect($serverName, $connectionInfo);
 
-    $query = 'SELECT * FROM sistemaCalificaciones.Estudiante';
+    $query = "SELECT clave, nombre FROM sistemaCalificaciones.Materia WHERE profesorEmail='$user'";
 
-    $stmt = sqlsrv_query( $conn, $query );
-
-    if( $stmt === false) {
-        die( print_r( sqlsrv_errors(), true) );
-    }
+    $stmt = sqlsrv_query( $conn, $query);
 
     $json = array();
 
     while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
-        $json['matricula'] = $row['matricula'];
+        $json['clave'] = $row['clave'];
         $json['nombre'] = $row['nombre'];
         $data[] = $json;
     }
@@ -34,7 +32,7 @@
     $jsonOut = json_encode($data);
     echo $jsonOut;
 
-    return "{\"Camion\": ".json_encode($data)."}";
+    return;
     
     sqlsrv_free_stmt( $stmt);
 ?>

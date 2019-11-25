@@ -1,5 +1,8 @@
 <?php
 
+    $user = $_GET['user'];
+    $pwd = $_GET['pwd'];
+
     // PHP Data Objects(PDO) Sample Code:
     try {
         $conn = new PDO("sqlsrv:server = tcp:sistema-calificaciones-db.database.windows.net,1433; Database = sistema-calificaciones", "saulelabra", "ConstruyeDB1");
@@ -15,7 +18,7 @@
     $serverName = "tcp:sistema-calificaciones-db.database.windows.net,1433";
     $conn = sqlsrv_connect($serverName, $connectionInfo);
 
-    $query = 'SELECT * FROM sistemaCalificaciones.Estudiante';
+    $query = "SELECT * FROM SELECT * FROM sistemaCalificaciones.Profesor WHERE email = 'email@gmail.com' AND contrasena = 'pwd'";
 
     $stmt = sqlsrv_query( $conn, $query );
 
@@ -34,7 +37,7 @@
     $jsonOut = json_encode($data);
     echo $jsonOut;
 
-    return "{\"Camion\": ".json_encode($data)."}";
+    return;
     
     sqlsrv_free_stmt( $stmt);
 ?>

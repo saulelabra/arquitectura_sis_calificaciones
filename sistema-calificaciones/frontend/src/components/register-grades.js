@@ -1,6 +1,6 @@
 //https://jsonplaceholder.typicode.com/users
 
-import React, { Component } from 'react';
+import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,12 +8,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import { Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+const contentStyle = {
+    height: '100%'
+}
 
 const tableStyle = {
     marginTop: '2%',
@@ -21,18 +24,8 @@ const tableStyle = {
     marginRight: '5%'
 }
 
-const backgroundStyle = {
-    color: 'blue'
-}
-
 const headersStyle = {
     fontWeight: 'bold'
-}
-
-const dropDownStyle = {
-    marginTop: '2%',
-    width: '20%',
-    padding:'0'
 }
 
 const buttonStyle = {
@@ -44,10 +37,32 @@ const logOutButtonStyle = {
     marginLeft: 'auto'
 }
 
+const sideBarStyle = {
+    backgroundColor : '#00235c',
+    width : '25%',
+    padding : '2%'
+}
+
+const sideBarTitleStyle = {
+    color : 'white',
+    textAlign : 'left'
+}
+
+const sideBarElementsStyle = {
+    color : 'white',
+    textAlign : 'left',
+    listStyleType : 'none'
+}
+
 class RegisterGrades extends React.Component {
+    _isMounted = false;
 
     state = {
-        persons: []
+        estudiantes: [],
+        materias: [],
+        materiaActual: ' ',
+        isLoadingMaterias: false,
+        isLoadingEstudiantes: false
     }
 
     /*componentDidMount() {
@@ -62,129 +77,127 @@ class RegisterGrades extends React.Component {
     }*/
 
     componentDidMount() {
-        axios.get("https://jsonplaceholder.typicode.com/users").then(res => {
-            console.log(res);
-            this.setState({ persons: res.data });
+        this._isMounted = true;
+        
+        this.setState(() => ({
+            isLoadingMaterias : true
+        }))
+
+        axios.post("https://sistema-calificaciones-api.azurewebsites.net/groupList.php", { 'user' : this.props.state.currUser }).then(res => {
+            if(this._isMounted) {
+
+                this.setState(() => ({
+                    isLoadingMaterias : false
+                }))
+
+                console.log(JSON.stringify(res));
+                this.setState({ materias: res.data });
+
+                axios.post("https://sistema-calificaciones-api.azurewebsites.net/getGroup.php", { 'claveMateria' : res.data[0].clave }).then(res => {
+                    console.log(JSON.stringify(res));
+                    this.setState({ estudiantes : res.data });
+                    this.setState({ materiaActual : res.data[0].materiaNombre });
+                });
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
+    getGroup(materiaClave) {
+        console.log("Clicked on materia");
+        axios.post("https://sistema-calificaciones-api.azurewebsites.net/getGroup.php", { 'claveMateria' : materiaClave }).then(res => {
+            console.log(JSON.stringify(res));
+            this.setState({ estudiantes : res.data });
         });
     }
 
     render() {
-        var files = {arr : [
-            {'matricula' : 'A01020725', nombre: 'Saúl Labra', cAcad: 100, cEq: 100, cCom: 100, estado: 'aprobado'},
-            {'matricula' : 'A01020123', nombre: 'Emilio Hernández', cAcad: 100, cEq: 100, cCom: 100, estado: 'aprobado'}
-        ]}
-
-        console.log(files);
-
         return(
-            <div className={'d-flex flex-column'}>
+            <div className={'d-flex flex-column'} style={contentStyle}>
                 <Navbar bg="light" expand="lg" className={'d-flex flex-row'}>
                     <Navbar.Brand>Grade - Assistant</Navbar.Brand>
                     <div></div>
                     <Link className="btn btn-primary" variant="contained" to="/" style={logOutButtonStyle}>Log Out</Link>
                 </Navbar>
-                <div className={"dropdown"} style={dropDownStyle}>
-                    <button className={"btn btn-secondary dropdown-toggle"} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown button
-                    </button>
-                    <div className={"dropdown-menu"} aria-labelledby="dropdownMenuButton">
-                        <a className={"dropdown-item"} href="#">Action</a>
-                        <a className={"dropdown-item"} href="#">Another action</a>
-                        <a className={"dropdown-item"} href="#">Something else here</a>
+                <div className={'d-flex flex-row'} style={contentStyle}>
+                    <div className={'d-flex flex-column'} style={sideBarStyle}>
+                        <h4 style={sideBarTitleStyle}>Materias</h4>
+                        <br/>
+                        <ul>
+                            {this.state.materias.map(materia => (
+                                <Button onClick={() => {this.getGroup(materia.clave)}} style={sideBarElementsStyle}>{materia.clave} {materia.nombre}</Button>
+                            ))}
+                        </ul>
                     </div>
-                </div>
-                <Paper style={tableStyle}>
-                    <Table>
-                    <TableHead>
-                        <TableRow style={headersStyle}>
-                        <TableCell align="center">Matrícula</TableCell>
-                        <TableCell align="center">Nombre</TableCell>
-                        <TableCell align="center">C.Académica</TableCell>
-                        <TableCell align="center">C. Equipo</TableCell>
-                        <TableCell align="center">C. Comunicación</TableCell>
-                        <TableCell align="center">Estado</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {files.arr.map(files => (
-                        <TableRow key={files.matricula}>
-                            <TableCell align="center">{files.matricula}</TableCell>
-                            <TableCell align="center">{files.nombre}</TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    id="cAcad"
-                                    label="C. Académica"
-                                    margin="normal"
-                                    type="number"
-                                    defaultValue={files.cAcad}
-                                />
-                            </TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    id="cEq"
-                                    label="C. Equipo"
-                                    margin="normal"
-                                    type="number"
-                                    defaultValue={files.cEq}
-                                />
-                            </TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    id="cCom"
-                                    label="C. Comunicación"
-                                    margin="normal"
-                                    type="number"
-                                    defaultValue={files.cCom}
-                                />
-                            </TableCell>
-                            <TableCell align="center">{files.estado}</TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableBody>
-                        {this.state.persons.map(person => (
-                        <TableRow key={person.id}>
-                            <TableCell align="center">{person.id}</TableCell>
-                            <TableCell align="center">{person.name}</TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    id="cAcad"
-                                    label="C. Académica"
-                                    margin="normal"
-                                    type="number"
-                                    defaultValue={99}
-                                />
-                            </TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    id="cEq"
-                                    label="C. Equipo"
-                                    margin="normal"
-                                    type="number"
-                                    defaultValue={99}
-                                />
-                            </TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    id="cCom"
-                                    label="C. Comunicación"
-                                    margin="normal"
-                                    type="number"
-                                    defaultValue={99}
-                                />
-                            </TableCell>
-                            <TableCell align="center">{person.username}</TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    </Table>
-                </Paper>
-                <div className={'dflex justify-content-center'}>
-                    <Button variant="primary" style={buttonStyle} className>Submit</Button>
+                    <div className={'d-flex flex-column'}>
+                            <h4>{this.state.materiaActual}</h4>
+                        <Paper style={tableStyle}>
+                            <Table>
+                            <TableHead>
+                                <TableRow style={headersStyle}>
+                                <TableCell align="center">Matrícula</TableCell>
+                                <TableCell align="center">Nombre</TableCell>
+                                <TableCell align="center">C.Académica</TableCell>
+                                <TableCell align="center">C. Equipo</TableCell>
+                                <TableCell align="center">C. Comunicación</TableCell>
+                                <TableCell align="center">Estado</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {this.state.estudiantes.map(estudiante => (
+                                <TableRow key={estudiante.estudianteMatricula}>
+                                    <TableCell align="center">{estudiante.estudianteMatricula}</TableCell>
+                                    <TableCell align="center">{estudiante.nombre}</TableCell>
+                                    <TableCell align="center">
+                                        <TextField
+                                            id="cAcad"
+                                            label="C. Académica"
+                                            margin="normal"
+                                            type="number"
+                                            defaultValue={estudiante.cAcad}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <TextField
+                                            id="cEq"
+                                            label="C. Equipo"
+                                            margin="normal"
+                                            type="number"
+                                            defaultValue={estudiante.cEq}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <TextField
+                                            id="cCom"
+                                            label="C. Comunicación"
+                                            margin="normal"
+                                            type="number"
+                                            defaultValue={estudiante.cCom}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="center">{estudiante.estatus}</TableCell>
+                                </TableRow>
+                                ))}
+                            </TableBody>
+                            </Table>
+                        </Paper>
+                        <div className={'dflex justify-content-center'}>
+                            <Button variant="primary" style={buttonStyle} className>Submit</Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-export default RegisterGrades;
+const mapStateToProps = (state) => {
+    return {
+      state: state.rootReducer,
+    }
+  }
+  
+export default connect(mapStateToProps)(RegisterGrades);
